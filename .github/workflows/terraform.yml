@@ -29,8 +29,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const core = require('@actions/core');
-
+            
             const token = await core.getIDToken('sts.amazonaws.com');
 
             const payload = JSON.parse(
