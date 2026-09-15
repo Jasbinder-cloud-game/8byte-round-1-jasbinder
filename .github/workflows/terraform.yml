@@ -19,12 +19,31 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::929746712415:role/terraform-auth
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Verify AWS authentication
-        run: aws sts get-caller-identity
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false # Prevents stdout wrapping issues if needed
+          # Notice we don't pass a hardcoded version string anymore!
+
+      # 4. Initialize Terraform Backend
+      - name: Terraform Init
+        run: terraform init
+
+      # 5. Check formatting syntax
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      # 6. Optional but recommended: Run a plan first so it shows up in your workflow logs
+      - name: Terraform Plan
+        run: terraform plan -no-color
+
+      # 7. Apply the changes automatically using the variables file
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
