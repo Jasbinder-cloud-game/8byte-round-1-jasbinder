@@ -17,31 +17,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Debug GitHub context
-        run: |
-          echo "Repository: $GITHUB_REPOSITORY"
-          echo "Ref: $GITHUB_REF"
-          echo "Event: $GITHUB_EVENT_NAME"
-          echo "Actor: $GITHUB_ACTOR"
-
-      - name: Inspect OIDC claims
-        uses: actions/github-script@v8
-        with:
-          script: |
-            
-            const token = await core.getIDToken('sts.amazonaws.com');
-
-            const payload = JSON.parse(
-              Buffer.from(token.split('.')[1], 'base64url').toString()
-            );
-
-            console.log(JSON.stringify({
-              iss: payload.iss,
-              sub: payload.sub,
-              aud: payload.aud
-            }, null, 2));
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
