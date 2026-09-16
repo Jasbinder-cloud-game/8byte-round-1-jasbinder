@@ -2,6 +2,10 @@
 
 resource "aws_vpc" "main" {
   cidr_block = "12.0.0.0/16"
+
+  tags = {
+    Name = "my-project-vpc" # This sets the display name in AWS
+  }
 }
 
 #subnets - 2 private and 2 public
@@ -46,6 +50,6 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "main"
+    Name = "my-project-igw"
   }
 }
