@@ -40,7 +40,7 @@ resource "aws_subnet" "public_subnet_2" {
   tags = {
     Name = "public-subnet-2"
   }
-}   
+}
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
