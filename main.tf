@@ -29,8 +29,8 @@ resource "aws_subnet" "private_subnet_2" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "12.0.2.0/24"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "12.0.2.0/24"
   map_public_ip_on_launch = true
 
   tags = {
@@ -39,8 +39,8 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "public_subnet_2" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "12.0.4.0/24"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "12.0.4.0/24"
   map_public_ip_on_launch = true
 
   tags = {
@@ -58,8 +58,8 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 
-resource "aws_route_table" "example" {
-  vpc_id = aws_vpc.example.id
+resource "aws_route_table" "public_subnet_to_internet" {
+  vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
