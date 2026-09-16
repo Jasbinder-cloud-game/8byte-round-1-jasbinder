@@ -8,23 +8,41 @@ resource "aws_vpc" "main" {
   }
 }
 
-#subnets - 2 private and 2 public
+#subnets - 2 private app, 2 db private and 2 public
 
-resource "aws_subnet" "private_subnet" {
+resource "aws_subnet" "app_pvt_subnet_1" {
   vpc_id     = aws_vpc.main.id
   cidr_block = "12.0.1.0/24"
 
   tags = {
-    Name = "private-subnet-1"
+    Name = "app-private-subnet-1"
   }
 }
 
-resource "aws_subnet" "private_subnet_2" {
+resource "aws_subnet" "app_pvt_subnet_2" {
   vpc_id     = aws_vpc.main.id
   cidr_block = "12.0.3.0/24"
 
   tags = {
-    Name = "private-subnet-2"
+    Name = "app-private-subnet-2"
+  }
+}
+
+resource "aws_subnet" "db_pvt_subnet_1" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "12.0.5.0/24"
+
+  tags = {
+    Name = "db-private-subnet-1"
+  }
+}
+
+resource "aws_subnet" "db_pvt_subnet_2" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "12.0.6.0/24"
+
+  tags = {
+    Name = "db-private-subnet-2"
   }
 }
 
