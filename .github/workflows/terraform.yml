@@ -1,9 +1,7 @@
 name: Terraform
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Allows you to trigger this manually from the GitHub UI
 
 permissions:
   id-token: write
