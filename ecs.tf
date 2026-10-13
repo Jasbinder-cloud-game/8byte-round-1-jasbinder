@@ -12,22 +12,31 @@ resource "aws_security_group" "ecs_sg" {
   }
 
   # Outbound: Route ECR API & Auth traffic to the ECR interface endpoints
-  egress {
-    description     = "HTTPS out to ECR interface endpoints"
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ecr_endpoint_sg.id]
-  }
-
-  # Outbound: Route heavy layer downloads to Amazon S3 via the Gateway Endpoint Prefix List
   # egress {
-  #   description     = "HTTPS out to Amazon S3 Gateway Endpoint"
+  #   description     = "HTTPS out to ECR interface endpoints"
   #   from_port       = 443
   #   to_port         = 443
   #   protocol        = "tcp"
-  #   prefix_list_ids = [data.aws_prefix_list.s3.id]
+  #   security_groups = [aws_security_group.ecr_endpoint_sg.id]
   # }
+
+  # Outbound: Route heavy layer downloads to Amazon S3 via the Gateway Endpoint Prefix List
+  egress {
+    description     = "HTTPS out to Amazon S3 Gateway Endpoint"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_prefix_list.s3.id]
+  }
+}
+
+resource "aws_security_group_rule" "allow_ecs_to_ecr" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecr_endpoint_sg.id # Where the rule is applied
+  source_security_group_id = aws_security_group.ecs_sg.id          # The traffic source
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
@@ -53,7 +62,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
-  role       = aws_iam_role.ecs_task_execution_role
+  role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
