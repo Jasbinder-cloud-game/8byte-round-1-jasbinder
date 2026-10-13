@@ -6,3 +6,4 @@ resource "aws_ecr_repository" "artifactory" {
     scan_on_push = true
   }
 }
+

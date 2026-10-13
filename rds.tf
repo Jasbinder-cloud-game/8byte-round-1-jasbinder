@@ -30,10 +30,10 @@ resource "aws_security_group" "postgres_sg" {
   }
 }
 
-resource "aws_db_instance" "default" {
+resource "aws_db_instance" "app_db" {
   allocated_storage           = 10
   db_name                     = "mydb"
-  username                    = jasbinder
+  username                    = "jasbinder"
   engine                      = "PostgreSQL"
   engine_version              = "17"
   instance_class              = "db.t4g.micro"

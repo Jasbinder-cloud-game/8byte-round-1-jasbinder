@@ -2,9 +2,11 @@
 
 resource "aws_vpc" "main" {
   cidr_block = "12.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
-    Name = "my-project-vpc" # This sets the display name in AWS
+    Name = "my-project-vpc"
   }
 }
 
@@ -99,4 +101,29 @@ resource "aws_route_table_association" "public_subnet_1" {
 resource "aws_route_table_association" "public_subnet_2" {
   subnet_id      = aws_subnet.public_subnet_2.id
   route_table_id = aws_route_table.public_subnet_to_internet.id
+}
+
+#route table for private subnets
+resource "aws_route_table" "private_subnet_to_internet" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "private-subnet-route-table"
+  }
+}
+
+#route table association for public subnets
+
+resource "aws_route_table_association" "private_subnet_1" {
+  subnet_id      = aws_subnet.app_pvt_subnet_1.id
+  route_table_id = aws_route_table.private_subnet_to_internet.id
+}
+
+resource "aws_route_table_association" "private_subnet_2" {
+  subnet_id      = aws_subnet.app_pvt_subnet_2.id
+  route_table_id = aws_route_table.private_subnet_to_internet.id
+}
+
+data "aws_route_table" "selected" {
+  subnet_id = var.subnet_id
 }
