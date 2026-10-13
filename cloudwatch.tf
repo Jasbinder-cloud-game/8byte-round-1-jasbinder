@@ -25,11 +25,11 @@ resource "aws_security_group" "cloudwatch_vpce_sg" {
   description = "allow traffic to send logs from ecs tasks to cloudwatch interface endpoints"
   vpc_id      = aws_vpc.main.id
 
-    ingress {
-      description     = "https from ecs tasks"
-      from_port       = 443
-      to_port         = 443
-      protocol        = "tcp"
-      security_groups = [aws_security_group.ecs_sg.id]
-    }
+  ingress {
+    description     = "https from ecs tasks"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_sg.id]
+  }
 }

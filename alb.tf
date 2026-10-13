@@ -1,21 +1,21 @@
 resource "aws_security_group" "alb_sg" {
   name        = "alb-sg"
   description = "allow inbound to alb"
-  vpc_id      = aws_vpc.main.id 
+  vpc_id      = aws_vpc.main.id
 
-    ingress {
-      description     = "allow traffice from internet to alb"
-      from_port       = 80
-      to_port         = 80
-      protocol        = "tcp"
-    }
+  ingress {
+    description = "allow traffice from internet to alb"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+  }
 
-    egress {
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-}
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_lb" "internet_facing_lb" {
@@ -34,8 +34,8 @@ resource "aws_lb_target_group" "ecs_target_group" {
   vpc_id   = aws_vpc.main.id
 
   health_check {
-    path = "/health"
-    port = "traffic-port"
+    path     = "/health"
+    port     = "traffic-port"
     protocol = "HTTP"
   }
 }

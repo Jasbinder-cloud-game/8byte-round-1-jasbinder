@@ -3,15 +3,15 @@ resource "aws_security_group" "ecs_sg" {
   description = "allow traffic from alb to ecs"
   vpc_id      = aws_vpc.main.id
 
-    ingress {
-      description     = "allow traffice from alb to ecs"
-      from_port       = 5000
-      to_port         = 5000
-      protocol        = "tcp"
-      security_groups = [aws_security_group.alb_sg.id]
-    }
+  ingress {
+    description     = "allow traffice from alb to ecs"
+    from_port       = 5000
+    to_port         = 5000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+  }
 
-    # Outbound: Route ECR API & Auth traffic to the ECR interface endpoints
+  # Outbound: Route ECR API & Auth traffic to the ECR interface endpoints
   egress {
     description     = "HTTPS out to ECR interface endpoints"
     from_port       = 443
@@ -34,9 +34,9 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "web-app-cluster"
 
   setting {
-  name  = "containerInsights"
-  value = "disabled"
-}
+    name  = "containerInsights"
+    value = "disabled"
+  }
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
@@ -76,8 +76,8 @@ resource "aws_ecs_task_definition" "app" {
     logConfiguration = {
       logDriver = "awslogs"
       options = {
-        awslogs-group         = aws_cloudwatch_log_group.ecs_logs.name
-        awslogs-region        = "us-east-1"
+        awslogs-group  = aws_cloudwatch_log_group.ecs_logs.name
+        awslogs-region = "us-east-1"
       }
     }
   }])
@@ -90,10 +90,10 @@ resource "aws_ecs_service" "app" {
   desired_count   = 1
   launch_type     = "FARGATE"
   load_balancer {
-  target_group_arn = aws_lb_target_group.ecs_target_group.arn
-  container_name   = "my-web-app"
-  container_port   = 5000
-}
+    target_group_arn = aws_lb_target_group.ecs_target_group.arn
+    container_name   = "my-web-app"
+    container_port   = 5000
+  }
 
   network_configuration {
     subnets          = [aws_subnet.app_pvt_subnet_1.id, aws_subnet.app_pvt_subnet_2.id]

@@ -7,13 +7,13 @@ resource "aws_security_group" "ecr_endpoint_sg" {
   description = "allow traffic from ecs tasks to ecr interface endpoints"
   vpc_id      = aws_vpc.main.id
 
-    ingress {
-      description     = "https from ecs tasks"
-      from_port       = 443
-      to_port         = 443
-      protocol        = "tcp"
-      security_groups = [aws_security_group.ecs_sg.id]
-    }
+  ingress {
+    description     = "https from ecs tasks"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_sg.id]
+  }
 }
 
 resource "aws_vpc_endpoint" "ecr_auth_endpoint" {
@@ -42,7 +42,7 @@ resource "aws_vpc_endpoint" "ecr_api_endpoint" {
   security_group_ids = [
     aws_security_group.ecr_endpoint_sg.id,
   ]
-  
+
 
   subnet_ids = [
     aws_subnet.app_pvt_subnet_2.id,
@@ -59,8 +59,8 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.us-east-1.s3"
   route_table_ids = [
-  aws_route_table.private_subnet_to_internet.id
-]
+    aws_route_table.private_subnet_to_internet.id
+  ]
 
   tags = {
     description = "Allows the ECS agent to download the heavy, actual container image layers stored by ECR"
