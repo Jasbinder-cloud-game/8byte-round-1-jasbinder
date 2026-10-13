@@ -7,13 +7,20 @@ resource "aws_security_group" "ecr_endpoint_sg" {
   description = "allow traffic from ecs tasks to ecr interface endpoints"
   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description     = "https from ecs tasks"
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ecs_sg.id]
-  }
+  # ingress {
+  #   description     = "https from ecs tasks"
+  #   from_port       = 443
+  #   to_port         = 443
+  #   protocol        = "tcp"
+  #   security_groups = [aws_security_group.ecs_sg.id]
+  # }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "example" {
+  security_group_id = aws_security_group.ecr_endpoint_sg.id
+
+  ip_protocol = "tcp"
+  referenced_security_group_id = aws_security_group.ecs_sg.id
 }
 
 resource "aws_vpc_endpoint" "ecr_auth_endpoint" {

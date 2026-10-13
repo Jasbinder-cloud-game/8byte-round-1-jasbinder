@@ -21,13 +21,13 @@ resource "aws_security_group" "ecs_sg" {
   }
 
   # Outbound: Route heavy layer downloads to Amazon S3 via the Gateway Endpoint Prefix List
-  egress {
-    description     = "HTTPS out to Amazon S3 Gateway Endpoint"
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    prefix_list_ids = [data.aws_prefix_list.s3.id]
-  }
+  # egress {
+  #   description     = "HTTPS out to Amazon S3 Gateway Endpoint"
+  #   from_port       = 443
+  #   to_port         = 443
+  #   protocol        = "tcp"
+  #   prefix_list_ids = [data.aws_prefix_list.s3.id]
+  # }
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
