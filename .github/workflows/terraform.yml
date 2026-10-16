@@ -1,7 +1,12 @@
 name: Terraform
 
 on:
-  workflow_dispatch: # Allows you to trigger this manually from the GitHub UI
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy (use the commit SHA from the ECR image workflow)"
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -9,6 +14,7 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
+  TF_VAR_docker_image_tag: ${{ inputs.image_tag }}
 
 jobs:
   terraform:

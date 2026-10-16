@@ -1,7 +1,7 @@
 #VPC
 
 resource "aws_vpc" "main" {
-  cidr_block           = "12.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -13,8 +13,9 @@ resource "aws_vpc" "main" {
 #subnets - 2 private app, 2 db private and 2 public
 
 resource "aws_subnet" "app_pvt_subnet_1" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "12.0.1.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "app-private-subnet-1"
@@ -22,8 +23,9 @@ resource "aws_subnet" "app_pvt_subnet_1" {
 }
 
 resource "aws_subnet" "app_pvt_subnet_2" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "12.0.3.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "app-private-subnet-2"
@@ -31,8 +33,9 @@ resource "aws_subnet" "app_pvt_subnet_2" {
 }
 
 resource "aws_subnet" "db_pvt_subnet_1" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "12.0.5.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "db-private-subnet-1"
@@ -40,8 +43,9 @@ resource "aws_subnet" "db_pvt_subnet_1" {
 }
 
 resource "aws_subnet" "db_pvt_subnet_2" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "12.0.6.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.6.0/24"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "db-private-subnet-2"
@@ -50,7 +54,8 @@ resource "aws_subnet" "db_pvt_subnet_2" {
 
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "12.0.2.0/24"
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 
   tags = {
@@ -60,7 +65,8 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "public_subnet_2" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "12.0.4.0/24"
+  cidr_block              = "10.0.4.0/24"
+  availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
 
   tags = {

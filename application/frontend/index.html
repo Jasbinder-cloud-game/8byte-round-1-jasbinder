@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f7fb" />
+    <meta name="description" content="A small deployment demo backed by Flask and PostgreSQL." />
+    <title>Platform Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Platform demo home">
+          <span class="brand-mark" aria-hidden="true">D</span>
+          <span>platform demo</span>
+        </a>
+        <span class="topbar-label">AWS · ECS · POSTGRESQL</span>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <p class="eyebrow">A SMALL END-TO-END DEPLOYMENT</p>
+          <h1 id="page-title">One request. <span>Three services.</span></h1>
+          <p class="intro-copy">The page is served by NGINX, the API runs on Flask, and PostgreSQL stores the visit counter.</p>
+        </section>
+
+        <section class="task-panel demo-panel" aria-labelledby="status-heading">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">LIVE CHECK</p>
+              <h2 id="status-heading">Platform status</h2>
+            </div>
+            <span id="overall-status" class="status-pill is-loading"><span class="status-dot"></span> Checking</span>
+          </div>
+
+          <div class="status-grid" aria-live="polite">
+            <div class="status-card">
+              <span class="status-label">API</span>
+              <strong id="api-status">Checking</strong>
+            </div>
+            <div class="status-card">
+              <span class="status-label">DATABASE</span>
+              <strong id="database-status">Checking</strong>
+            </div>
+          </div>
+
+          <div class="visit-row">
+            <div>
+              <p class="eyebrow">PERSISTED IN POSTGRESQL</p>
+              <p class="visit-count"><span id="visit-count">—</span><span> visits</span></p>
+            </div>
+            <button id="visit-button" class="primary-button" type="button" disabled>Record a visit <span aria-hidden="true">↗</span></button>
+          </div>
+
+          <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+          <div class="panel-footer"><span class="live-dot" aria-hidden="true"></span> Browser → ALB → NGINX → Flask → PostgreSQL</div>
+        </section>
+      </main>
+
+      <footer class="footer">A lightweight demo of the deployment path.</footer>
+    </div>
+  </body>
+</html>

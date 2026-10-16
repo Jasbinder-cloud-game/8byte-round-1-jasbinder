@@ -1,0 +1,58 @@
+# name: Build and Push Images
+# on:
+#   push:
+#     branches: [main]
+#     paths:
+#       - "application/devops-demo/**"
+#       - "application/frontend/**"
+#       - ".github/workflows/ecr-push.yml"
+#   workflow_dispatch:
+
+# permissions:
+#   id-token: write
+#   contents: read
+
+# env:
+#   AWS_REGION: us-east-1
+#   BACKEND_REPOSITORY: jasbinder-backend-registry
+#   FRONTEND_REPOSITORY: jasbinder-frontend-registry
+
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v6
+#         with:
+#           role-to-assume: arn:aws:iam::929746712415:role/terraform-auth
+#           aws-region: ${{ env.AWS_REGION }}
+
+#       - name: Login to Amazon ECR
+#         id: login-ecr
+#         uses: aws-actions/amazon-ecr-login@v2
+
+#       - name: Build and push backend image
+#         uses: docker/build-push-action@v6
+#         with:
+#           context: ./application/devops-demo
+#           file: ./application/devops-demo/Dockerfile
+#           push: true
+#           tags: |
+#             ${{ steps.login-ecr.outputs.registry }}/${{ env.BACKEND_REPOSITORY }}:${{ github.sha }}
+#             ${{ steps.login-ecr.outputs.registry }}/${{ env.BACKEND_REPOSITORY }}:latest
+
+#       - name: Build and push frontend image
+#         uses: docker/build-push-action@v6
+#         with:
+#           context: ./application/frontend
+#           file: ./application/frontend/Dockerfile
+#           push: true
+#           tags: |
+#             ${{ steps.login-ecr.outputs.registry }}/${{ env.FRONTEND_REPOSITORY }}:${{ github.sha }}
+#             ${{ steps.login-ecr.outputs.registry }}/${{ env.FRONTEND_REPOSITORY }}:latest
+
+#       - name: Report deploy tag
+#         run: echo "Image tag to enter in the Terraform workflow: \`${GITHUB_SHA}\`" >> "$GITHUB_STEP_SUMMARY"

@@ -1,5 +1,10 @@
-resource "aws_cloudwatch_log_group" "ecs_logs" {
-  name              = "/ecs/my-web-app"
+resource "aws_cloudwatch_log_group" "frontend_log_group" {
+  name              = "/ecs/frontend"
+  retention_in_days = 7
+}
+
+resource "aws_cloudwatch_log_group" "backend_log_group" {
+  name              = "/ecs/backend"
   retention_in_days = 7
 }
 

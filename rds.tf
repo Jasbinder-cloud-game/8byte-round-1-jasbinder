@@ -13,28 +13,22 @@ resource "aws_security_group" "postgres_sg" {
   name        = "postgres-rds-sg"
   description = "Allow inbound PostgreSQL traffic"
   vpc_id      = aws_vpc.main.id
+}
 
-  ingress {
-    description     = "Allow app servers to connect"
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.app_sg.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["12.0.0.0/16"]
-  }
+resource "aws_security_group_rule" "allow_app_to_postgres" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.postgres_sg.id # Where the rule is applied
+  source_security_group_id = aws_security_group.ecs_sg.id      # The traffic source
 }
 
 resource "aws_db_instance" "app_db" {
   allocated_storage           = 10
   db_name                     = "mydb"
   username                    = "jasbinder"
-  engine                      = "PostgreSQL"
+  engine                      = "postgres"
   engine_version              = "17"
   instance_class              = "db.t4g.micro"
   storage_type                = "gp3"
