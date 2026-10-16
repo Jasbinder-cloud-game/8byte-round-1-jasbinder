@@ -25,7 +25,7 @@ resource "aws_security_group_rule" "allow_app_to_postgres" {
 }
 
 resource "aws_db_instance" "app_db" {
-  allocated_storage           = 10
+  allocated_storage           = 20
   db_name                     = "mydb"
   username                    = "jasbinder"
   engine                      = "postgres"

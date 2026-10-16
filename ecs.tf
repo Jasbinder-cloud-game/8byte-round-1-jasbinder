@@ -69,15 +69,6 @@ resource "aws_vpc_security_group_egress_rule" "egress_rule_for_postgres" {
   from_port                    = 5432
   to_port                      = 5432
 }
-resource "aws_security_group_rule" "allow_ecs_to_ecr" {
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.ecr_endpoint_sg.id # Where the rule is applied
-  source_security_group_id = aws_security_group.ecs_sg.id          # The traffic source
-}
-
 resource "aws_vpc_security_group_egress_rule" "egress_rule_for_secretsmanager" {
   description                  = "allow app to retireve secrets from secretsmanager"
   security_group_id            = aws_security_group.ecs_sg.id
@@ -169,8 +160,9 @@ resource "aws_ecs_task_definition" "backend_app" {
     logConfiguration = {
       logDriver = "awslogs"
       options = {
-        awslogs-group  = aws_cloudwatch_log_group.backend_log_group.name
-        awslogs-region = "us-east-1"
+        awslogs-group         = aws_cloudwatch_log_group.backend_log_group.name
+        awslogs-region        = "us-east-1"
+        awslogs-stream-prefix = "backend"
       }
     }
   }])
@@ -223,8 +215,9 @@ resource "aws_ecs_task_definition" "frontend_app" {
     logConfiguration = {
       logDriver = "awslogs"
       options = {
-        awslogs-group  = aws_cloudwatch_log_group.frontend_log_group.name
-        awslogs-region = "us-east-1"
+        awslogs-group         = aws_cloudwatch_log_group.frontend_log_group.name
+        awslogs-region        = "us-east-1"
+        awslogs-stream-prefix = "frontend"
       }
     }
   }])
