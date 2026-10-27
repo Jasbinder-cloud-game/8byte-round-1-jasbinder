@@ -50,13 +50,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          # Optional: cache 'pip', 'pipenv', or 'poetry' dependencies
-          cache: 'pip' 
-
+          
       - name: Install dependencies
         run: |
           python3 -m pip install -r application/devops-demo/requirements-dev.txt
 
       - name: Run tests on the backend flask app
-        working-directory: /application/devops-demo
+        working-directory: application/devops-demo
         run: python3 -m pytest -q
