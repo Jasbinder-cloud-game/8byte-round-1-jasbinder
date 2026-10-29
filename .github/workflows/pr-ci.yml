@@ -1,4 +1,4 @@
-name: PostgreSQL Service Example
+name: PR CI Checks
 on: 
   pull_request:
     branches:
@@ -77,6 +77,6 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check
       - name: Terraform Init
-        run: terraform init -backend=false input=false
+        run: terraform init -backend=false -input=false
       - name: Terraform Validate
         run: terraform validate
