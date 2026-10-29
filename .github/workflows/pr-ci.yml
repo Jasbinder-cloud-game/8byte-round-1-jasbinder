@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   # Label of the runner job
-  runner-job:
+  db-integration-job:
     # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
     env:
@@ -58,3 +58,25 @@ jobs:
       - name: Run tests on the backend flask app
         working-directory: application/devops-demo
         run: python3 -m pytest -q
+        # python depedencies check
+  pip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pypa/gh-action-pip-audit@v1.1.0
+        with: 
+          inputs: application/devops-demo/requirements-dev.txt
+  terraform-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false # Prevents stdout wrapping issues if needed
+      - name: Terraform Format Check
+        run: terraform fmt -check
+      - name: Terraform Init
+        run: terraform init -backend=false input=false
+      - name: Terraform Validate
+        run: terraform validate
