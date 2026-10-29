@@ -1,0 +1,82 @@
+name: PR CI Checks
+on: 
+  pull_request:
+    branches:
+      - main
+# Set a restrictive default for the entire workflow
+permissions:
+  contents: read
+
+jobs:
+  # Label of the runner job
+  db-integration-job:
+    # You must use a Linux environment when using service containers or container jobs
+    runs-on: ubuntu-latest
+    env:
+      TEST_DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+      REQUIRE_TEST_DATABASE: "1"
+      # Environment variables used by the `client.js` script to create
+      # a new PostgreSQL table.
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # databse url and other configuration to the job
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
+        uses: actions/checkout@v6
+
+      # Set up Python 3.12 and cache dependencies
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r application/devops-demo/requirements-dev.txt
+
+      - name: Run tests on the backend flask app
+        working-directory: application/devops-demo
+        run: python3 -m pytest -q
+        # python depedencies check
+  pip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pypa/gh-action-pip-audit@v1.1.0
+        with: 
+          inputs: application/devops-demo/requirements-dev.txt
+  terraform-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false # Prevents stdout wrapping issues if needed
+      - name: Terraform Format Check
+        run: terraform fmt -check
+      - name: Terraform Init
+        run: terraform init -backend=false -input=false
+      - name: Terraform Validate
+        run: terraform validate
