@@ -9,7 +9,8 @@ permissions:
 
 jobs:
   # Label of the runner job
-  db-integration-job:
+  integration-tests:
+    needs: pip-audit
     # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
     env:
@@ -58,7 +59,7 @@ jobs:
       - name: Run tests on the backend flask app
         working-directory: application/devops-demo
         run: python3 -m pytest -q
-        # python depedencies check
+        # python vulnerabilities check
   pip-audit:
     runs-on: ubuntu-latest
     steps:
@@ -80,3 +81,35 @@ jobs:
         run: terraform init -backend=false -input=false
       - name: Terraform Validate
         run: terraform validate
+  trivy-image-build-and-scan-backend:
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t myapp:latest application/devops-demo
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'myapp:latest'
+          format: 'table'
+          exit-code: '1' # Fails the GitHub Action workflow if vulnerabilities are found
+          ignore-unfixed: true # Skips CVEs that don't have a fix version yet
+          severity: 'CRITICAL,HIGH'
+  trivy-image-build-and-scan-frontend:
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t myapp:latest application/frontend
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'myapp:latest'
+          format: 'table'
+          exit-code: '1' # Fails the GitHub Action workflow if vulnerabilities are found
+          ignore-unfixed: true # Skips CVEs that don't have a fix version yet
+          severity: 'CRITICAL,HIGH'
