@@ -66,7 +66,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Docker image
-        working-directory: application/devops-demo
+        working-directory: application/backend
         run: |
           docker build -t ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
       - name: Run Trivy Vulnerability Scanner

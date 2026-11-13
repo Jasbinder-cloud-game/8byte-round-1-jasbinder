@@ -1,0 +1,2 @@
+deciding mutability od ecr repository -- In mutable repos image tags are overwritten, 
+runner arch should match ecs task container arch to ensure complatibility,
