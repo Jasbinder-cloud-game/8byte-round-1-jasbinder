@@ -1,20 +1,19 @@
 name: Terraform
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       image_tag:
-        description: "Image tag to deploy (use the commit SHA from the ECR image workflow)"
+        description: 'Docker image tag to use for the Terraform deployment'
         required: true
         type: string
-
+  
 permissions:
   id-token: write
   contents: read
 
 env:
   AWS_REGION: us-east-1
-  TF_VAR_docker_image_tag: ${{ inputs.image_tag }}
 
 jobs:
   terraform:
@@ -46,8 +45,8 @@ jobs:
 
       # 6. Optional but recommended: Run a plan first so it shows up in your workflow logs
       - name: Terraform Plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -var "docker_image_tag=${{ inputs.image_tag }}"
 
       # 7. Apply the changes automatically using the variables file
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var "docker_image_tag=${{ inputs.image_tag }}"
