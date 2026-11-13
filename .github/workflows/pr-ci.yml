@@ -54,7 +54,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          python3 -m pip install -r application/devops-demo/requirements-dev.txt
+          python3 -m pip install -r application/backend/requirements-dev.txt
 
       - name: Run tests on the backend flask app
         working-directory: application/backend
