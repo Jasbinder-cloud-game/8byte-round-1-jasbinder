@@ -7,4 +7,5 @@ variable "aws_region" {
 variable "docker_image_tag" {
   description = "Docker image tag"
   type        = string
+  default     = "c5a7d15e57528f72905a19cf023177a5002e965d"
 }
