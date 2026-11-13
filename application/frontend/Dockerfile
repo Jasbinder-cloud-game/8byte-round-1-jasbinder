@@ -1,4 +1,6 @@
 FROM nginx:1.30.6-alpine3.24
+LABEL org.opencontainers.image.title="Portfolio Frontend" \
+      org.opencontainers.image.description="Frontend container for the portfolio deployment"
 
 RUN apk add --no-cache --upgrade libxslt
 

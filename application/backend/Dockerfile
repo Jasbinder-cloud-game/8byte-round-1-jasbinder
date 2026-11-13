@@ -1,4 +1,6 @@
 FROM python:3.12-slim
+LABEL org.opencontainers.image.title="Portfolio Backend" \
+      org.opencontainers.image.description="Backend container for the portfolio deployment"
 
 WORKDIR /app
 
